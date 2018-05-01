@@ -6,3 +6,5 @@ class Figure:
         self.isSelected = False
         self.can_used = False
 
+
+

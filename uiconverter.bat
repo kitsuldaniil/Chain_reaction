@@ -1,0 +1,1 @@
+"C:\Python35(Qt)\Lib\site-packages\PyQt5\pyuic5.bat" MainWin.ui -o MainWin.py
