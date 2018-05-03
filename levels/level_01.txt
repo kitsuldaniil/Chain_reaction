@@ -1,0 +1,9 @@
+round red
+square blue
+square red
+round blue
+square red
+round blue
+square blue
+round blue
+round red

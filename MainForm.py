@@ -18,20 +18,20 @@ class MainForm(QMainWindow, MainWin):
         self.setupUi(self)
 
         self.help = None
+        self.gam = None
         lvl = 'levels/level_0' + str(self.levelspinBox.value()) + '.txt'
 
-
-        images_dir = os.path.join(os.path.dirname(__file__), 'images')
+        images_dir = os.path.join(os.path.dirname(__file__), 'images')  # СЛОВАРЬ ИЗОБРАЖЕНИЙ
         self._images = {
             os.path.splitext(f)[0]: QImage(os.path.join(images_dir, f))
             for f in os.listdir(images_dir)
         }
-       # QtSvg.QSvgRenderer(os.path.join(images_dir, f))
-        self.game = Game(lvl)
-        self.matrix = copy.deepcopy(self.game.figures)
-        self.make_matrix(self.game)    # мб убрать
 
-        self.settings.triggered.connect(self.show_help)  # работает
+        self._game = Game(lvl)
+        self.matrix = copy.deepcopy(self._game.get_figures)   # ?можно и убрать?
+        self.make_matrix(self._game)    # мб убрать
+
+        self.settings.triggered.connect(self.show_help)
         self.new_game.triggered.connect(self.on_new_game)
 
         class Delegate(QItemDelegate):
@@ -40,23 +40,22 @@ class MainForm(QMainWindow, MainWin):
 
             def paint(self, painter: QPainter, option: QStyleOptionViewItem, m: QModelIndex):
                 painter.save()
-
                 self.parent().item_paint(m, painter, option)
                 painter.restore()
-       # self.tableView.rowHeight(83)
+        #self.tableView.rowHeight(83)
         #self.tableView.setColumnWidth(2, 83)
-        for i in range(self.game.rows):
+
+        for i in range(self._game.rows):
             self.tableView.setRowHeight(i, 85)
-        for j in range(self.game.columns):
+        for j in range(self._game.columns):
             self.tableView.setColumnWidth(j, 85)
-        self.tableView.mousePressEvent = self.mouse_table_clicked
+
+        self.tableView.mousePressEvent = self.table_mouse
         self.tableView.setItemDelegate(Delegate(self))
 
 
-    def _level(self):   # ФОРМИРОВАНИЕ УРОВНЯ В ЗАВИСИМОСТИ ОТ СПИНА
-        if self.levelspinBox.value == 2:
-            return 'levels/level_02.txt'
-        return 'levels/level_01.txt'
+    def set_level(self):   # ФОРМИРОВАНИЕ УРОВНЯ В ЗАВИСИМОСТИ ОТ СПИНА
+          return 'levels/level_0' + str(self.levelspinBox.value()) + '.txt'
 
     def show_help(self):           # open rules
         self.help = HelpWindow()
@@ -77,34 +76,37 @@ class MainForm(QMainWindow, MainWin):
          #         widget.setIco
 
     def on_new_game(self):     # НАЖАТИЕ "НОВАЯ ИГРА"
-        lvl = self._level()
-        self.game == Game(lvl)
-        self.make_matrix(self.game)
+        self._game == Game(self.set_level())
+        self.matrix = None
+        self.matrix = copy.deepcopy(self._game.figures)
+        self.make_matrix(self._game)
 
     def item_paint(self, m: QModelIndex, painter: QPainter, options: QStyleOptionViewItem):
-        item = self.matrix[m.row()][m.column()]
+        item = self._game.figures[m.row()][m.column()]
         color_type = str(item.color) + '_' + str(item.typ)
         if item.state == FigureState.Init:
             img = self._images[color_type+'_init']
-        if item.state == FigureState.Checked:
+        elif item.state == FigureState.Checked:
             img = self._images[color_type + '_checked']
         else:
             img = self._images[color_type + '_current']
 
-        #rect = QRect(m.x(), m.y(), 83, 83)
+
         painter.drawImage(QRectF(options.rect), img)
-        self.update()  # shit
-
-        #img.render(painter, QRectF(options.rect))
+        #self.update()
 
 
+    def table_mouse(self, e: QMouseEvent):
+        idx = self.tableView.indexAt(e.pos())
+        self.mouse_table_clicked(idx, e)
 
-    def mouse_table_clicked(self, m: QModelIndex, e: QMouseEvent=None, painter: QPainter=None, options: QStyleOptionViewItem=None):
+    def mouse_table_clicked(self, m: QModelIndex, e: QMouseEvent=None):
         if e.button() == Qt.LeftButton:
-            self.game.mouse_click(self.matrix[m.row()][m.column()])
+            self._game.mouse_click(self.matrix[m.row()][m.column()])
         else:
             return
         self.invalidate()
+        self.update()
 
     def invalidate(self):
         self.tableView.viewport().update()
