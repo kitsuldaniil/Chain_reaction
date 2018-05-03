@@ -51,6 +51,24 @@
       <height>280</height>
      </size>
     </property>
+    <property name="iconSize">
+     <size>
+      <width>10</width>
+      <height>10</height>
+     </size>
+    </property>
+    <property name="showGrid">
+     <bool>true</bool>
+    </property>
+    <attribute name="horizontalHeaderVisible">
+     <bool>false</bool>
+    </attribute>
+    <attribute name="horizontalHeaderHighlightSections">
+     <bool>true</bool>
+    </attribute>
+    <attribute name="verticalHeaderVisible">
+     <bool>false</bool>
+    </attribute>
    </widget>
    <widget class="QSpinBox" name="levelspinBox">
     <property name="geometry">
@@ -102,6 +120,19 @@
      <number>7</number>
     </property>
    </widget>
+   <widget class="QPushButton" name="test">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>0</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>PushButton</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -116,8 +147,8 @@
     <property name="title">
      <string>Игра</string>
     </property>
-    <addaction name="action_2"/>
-    <addaction name="action_3"/>
+    <addaction name="new_game"/>
+    <addaction name="settings"/>
    </widget>
    <widget class="QMenu" name="menuOptions">
     <property name="toolTip">
@@ -149,12 +180,12 @@
     <string>2</string>
    </property>
   </action>
-  <action name="action_2">
+  <action name="new_game">
    <property name="text">
     <string>Новая</string>
    </property>
   </action>
-  <action name="action_3">
+  <action name="settings">
    <property name="text">
     <string>Настройки</string>
    </property>
