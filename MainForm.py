@@ -18,7 +18,7 @@ class MainForm(QMainWindow, MainWin):
         self.setupUi(self)
 
         self.help = None
-        self.gam = None
+
         lvl = 'levels/level_0' + str(self.levelspinBox.value()) + '.txt'
 
         images_dir = os.path.join(os.path.dirname(__file__), 'images')  # СЛОВАРЬ ИЗОБРАЖЕНИЙ
@@ -32,7 +32,7 @@ class MainForm(QMainWindow, MainWin):
         self.make_matrix(self._game)    # мб убрать
 
         self.settings.triggered.connect(self.show_help)
-        self.new_game.triggered.connect(self.on_new_game)
+        self.new_game.triggered.connect(on_new_game)
 
         class Delegate(QItemDelegate):
             def __init__(self, parent=None, *args):
@@ -50,12 +50,21 @@ class MainForm(QMainWindow, MainWin):
         for j in range(self._game.columns):
             self.tableView.setColumnWidth(j, 85)
 
-        self.tableView.mousePressEvent = self.table_mouse
+        def table_mouse(e: QMouseEvent) -> None:
+            idx = self.tableView.indexAt(e.pos())
+            self.mouse_table_clicked(idx, e)
+
+        self.tableView.mousePressEvent = table_mouse
         self.tableView.setItemDelegate(Delegate(self))
 
+    def set_level(self) -> str:  # ФОРМИРОВАНИЕ УРОВНЯ В ЗАВИСИМОСТИ ОТ СПИНА
+        return 'levels/level_0' + str(self.levelspinBox.value()) + '.txt'
 
-    def set_level(self):   # ФОРМИРОВАНИЕ УРОВНЯ В ЗАВИСИМОСТИ ОТ СПИНА
-          return 'levels/level_0' + str(self.levelspinBox.value()) + '.txt'
+    def on_new_game(self) -> None:  # НАЖАТИЕ "НОВАЯ ИГРА"
+        self._game == Game(set_level())
+        self.matrix = None
+        self.matrix = copy.deepcopy(self._game.figures)
+        self.make_matrix(self._game)
 
     def show_help(self):           # open rules
         self.help = HelpWindow()
@@ -75,12 +84,6 @@ class MainForm(QMainWindow, MainWin):
          #         widget.setItem(game.rows, game.columns, item)
          #         widget.setIco
 
-    def on_new_game(self):     # НАЖАТИЕ "НОВАЯ ИГРА"
-        self._game == Game(self.set_level())
-        self.matrix = None
-        self.matrix = copy.deepcopy(self._game.figures)
-        self.make_matrix(self._game)
-
     def item_paint(self, m: QModelIndex, painter: QPainter, options: QStyleOptionViewItem):
         item = self._game.figures[m.row()][m.column()]
         color_type = str(item.color) + '_' + str(item.typ)
@@ -96,13 +99,9 @@ class MainForm(QMainWindow, MainWin):
         #self.update()
 
 
-    def table_mouse(self, e: QMouseEvent):
-        idx = self.tableView.indexAt(e.pos())
-        self.mouse_table_clicked(idx, e)
-
     def mouse_table_clicked(self, m: QModelIndex, e: QMouseEvent=None):
         if e.button() == Qt.LeftButton:
-            self._game.mouse_click(self.matrix[m.row()][m.column()])
+            self._game.mouse_click(self._game.figures[m.row()][m.column()])
         else:
             return
         self.invalidate()

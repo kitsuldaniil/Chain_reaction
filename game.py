@@ -38,7 +38,7 @@ class Game:
     def __init__(self, level):  # level - это путь к файлу в директории levels
         #self.level = level
         self.figures = None
-
+        self._tmplist = []
         self._make_level(level)
         self.define_place()
 
@@ -63,10 +63,10 @@ class Game:
 
     def _make_level(self, level):  # парсить файл и формировать список списков из фигур по нажатию кнопки Run
         f = open(level, 'r')
-        tmplist = []
+        #tmplist = []
         for fig in f:
-            tmplist.append(Figure(fig.split()[0], fig.split()[1], FigureState.Init))
-        self.figures = [tmplist[i:i+3] for i in range(0, 9, 3)] #  матрица из фигур 3 на 3
+            self._tmplist.append(Figure(fig.split()[0], fig.split()[1], FigureState.Init))
+        self.figures = [self._tmplist[i:i+3] for i in range(0, 9, 3)] #  матрица из фигур 3 на 3
 
 
     def define_place(self):         # проверка, в одном ли подсписке (вертикаль/горизонталь)
@@ -97,13 +97,14 @@ class Game:
                     return True
         return False
 
-    def mouse_click(self, chosen: Figure):
-        if len(self.list_checked) == len(self.figures):  # win
+    def mouse_click(self, chosen: Figure) -> None:
+        if len(self.list_checked) == len(self._tmplist):  # win
             return
-        elif chosen.state == FigureState.Init:
+        elif chosen.state == FigureState.Init:   # playing
             if self.list_checked[self.countchecked-1].row == chosen.row or \
                 self.list_checked[self.countchecked - 1].column == chosen.column:             #  проверка, находится ли элемент по вертикали или горизонтали
-                if chosen.color == self.lastchecked.color or chosen.typ == self.lastchecked.typ:  #  одинаковый тип или фигура
+                if chosen.color == self.list_checked[self.countchecked - 1].color or \
+                        chosen.typ == self.list_checked[self.countchecked - 1].typ:  #  одинаковый тип или фигура
                     self.list_checked[self.countchecked - 1]._state = FigureState.Checked    # белый крестик
                     chosen._state = FigureState.Current   #       тёмный крестик
                     #self.lastchecked = chosen
