@@ -8,7 +8,7 @@ from HelpWin import Ui_HelpWin as HelpWin
 from game import *
 from PyQt5.QtWidgets import QMainWindow, QPushButton, QItemDelegate, QApplication, QAction, QTableView, QTableWidget, \
     QTableWidgetItem, QStyleOptionViewItem, QHeaderView
-from PyQt5.QtGui import QStandardItemModel, QPainter, QMouseEvent, QIcon, QImage
+from PyQt5.QtGui import QStandardItemModel, QPainter, QMouseEvent, QIcon, QImage, QFont, QColor
 from PyQt5.QtCore import QModelIndex, QRectF, Qt, QRect
 
 
@@ -27,12 +27,16 @@ class MainForm(QMainWindow, MainWin):
             for f in os.listdir(images_dir)
         }
 
-        self._game = Game(lvl)
-        self.matrix = copy.deepcopy(self._game.get_figures)   # ?можно и убрать?
+        self._game = Game(self.set_level())
+        self.matrix = copy.deepcopy(self._game.figures)    #  ?можно и убрать?
+        #self.on_new_game()
         self.make_matrix(self._game)    # мб убрать
 
+        def new_game():
+            self.on_new_game(self._game)
+
         self.settings.triggered.connect(self.show_help)
-        self.new_game.triggered.connect(on_new_game)
+        self.new_game.triggered.connect(new_game)
 
         class Delegate(QItemDelegate):
             def __init__(self, parent=None, *args):
@@ -42,29 +46,37 @@ class MainForm(QMainWindow, MainWin):
                 painter.save()
                 self.parent().item_paint(m, painter, option)
                 painter.restore()
-        #self.tableView.rowHeight(83)
-        #self.tableView.setColumnWidth(2, 83)
 
         for i in range(self._game.rows):
             self.tableView.setRowHeight(i, 85)
         for j in range(self._game.columns):
             self.tableView.setColumnWidth(j, 85)
 
-        def table_mouse(e: QMouseEvent) -> None:
+
+
+        def table_mouse_event(e: QMouseEvent) -> None:
             idx = self.tableView.indexAt(e.pos())
             self.mouse_table_clicked(idx, e)
 
-        self.tableView.mousePressEvent = table_mouse
+        self.tableView.mousePressEvent = table_mouse_event
         self.tableView.setItemDelegate(Delegate(self))
 
     def set_level(self) -> str:  # ФОРМИРОВАНИЕ УРОВНЯ В ЗАВИСИМОСТИ ОТ СПИНА
         return 'levels/level_0' + str(self.levelspinBox.value()) + '.txt'
 
-    def on_new_game(self) -> None:  # НАЖАТИЕ "НОВАЯ ИГРА"
-        self._game == Game(set_level())
-        self.matrix = None
-        self.matrix = copy.deepcopy(self._game.figures)
-        self.make_matrix(self._game)
+    # def on_new_game(self) -> None:  # НАЖАТИЕ "НОВАЯ ИГРА"
+    #    #self._game = None
+    #     self._game == Game(self.set_level())
+    #     # self.matrix = None
+    #     self.matrix = copy.deepcopy(self._game.figures)
+    #     self.make_matrix(self._game)
+
+
+    def on_new_game(self, game: Game) -> None:  # НАЖАТИЕ "НОВАЯ ИГРА"
+        game == Game(self.set_level())
+        # self.matrix = None
+        self.matrix = copy.deepcopy(game.figures)
+        self.make_matrix(game)
 
     def show_help(self):           # open rules
         self.help = HelpWindow()
@@ -96,12 +108,22 @@ class MainForm(QMainWindow, MainWin):
 
 
         painter.drawImage(QRectF(options.rect), img)
+
+       # if self._game.win:
+           # self.draw_win(painter, options)
         #self.update()
 
+    def paintEvent(self, e):
+        if self._game.win:
+            qp = QPainter()
+            qp.begin(self)
+            self.draw_win(qp, e)
+            qp.end()
 
     def mouse_table_clicked(self, m: QModelIndex, e: QMouseEvent=None):
         if e.button() == Qt.LeftButton:
             self._game.mouse_click(self._game.figures[m.row()][m.column()])
+
         else:
             return
         self.invalidate()
@@ -110,7 +132,11 @@ class MainForm(QMainWindow, MainWin):
     def invalidate(self):
         self.tableView.viewport().update()
 
-
+    def draw_win(self, qp: QPainter, e):
+        #qp = QPainter()
+        qp.setPen(QColor(168, 34, 3))
+        qp.setFont(QFont('Decorative', 32))
+        qp.drawText(e.rect(), Qt.AlignBottom, 'Congratulations')
 
 
 
