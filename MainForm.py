@@ -29,8 +29,8 @@ class MainForm(QMainWindow, MainWin):
         }
 
         self._game = Game(self.set_level())
-        #self.matrix = copy.deepcopy(self._game._figures)    #  ?можно и убрать?
-        #self.on_new_game()
+        # self.matrix = copy.deepcopy(self._game._figures)    #  ?можно и убрать?
+        # self.on_new_game()
         self.make_matrix(self._game)    # мб убрать
 
         self.settings.triggered.connect(self.show_help)

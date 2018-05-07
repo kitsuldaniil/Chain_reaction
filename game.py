@@ -5,7 +5,7 @@ import copy
 class FigureState(Enum):
     Init = 0
     Checked = 1
-    Current = 2  #текущая позиция фигуры (lastchecked)
+    Current = 2  # текущая позиция фигуры (lastchecked)
 
 
 class Figure:
@@ -15,8 +15,6 @@ class Figure:
         self._state = state
         self.row = None
         self.column = None
-        #self.win = False
-        #self._count = 0
 
     @property
     def typ(self):
@@ -47,11 +45,11 @@ class Game:
         self.win = False
 
         if self._figures is not None:
-            #self.lastchecked = self._figures[0][0]
+            # self.lastchecked = self._figures[0][0]
             self._figures[0][0].state = FigureState.Current
             self.count_checked = 1 # количество пройденных фигур
             self.list_checked = [self._figures[0][0]]
-        ''' painting '''
+
 
     @property
     def rows(self):
@@ -60,10 +58,6 @@ class Game:
     @property
     def columns(self):
         return len(self._figures[0])
-
-    @property
-    def get__figures(self):
-        return self._figures
 
     @property
     def figures(self):
@@ -77,7 +71,8 @@ class Game:
     def figures(self):
         self._figures = []
 
-    def _make_level(self, level):  # парсить файл и формировать список списков из фигур по нажатию кнопки Run
+    # парсить файл и формировать список списков из фигур по нажатию кнопки Run
+    def _make_level(self, level):
         f = open(level, 'r')
         #tmplist = []
         for fig in f:
@@ -85,8 +80,8 @@ class Game:
         f.close()
         self._figures = [self._tmplist[i:i+3] for i in range(0, 9, 3)] #  матрица из фигур 3 на 3
 
-
-    def define_place(self):         # проверка, в одном ли подсписке (вертикаль/горизонталь)
+    # проверка, в одном ли подсписке (вертикаль/горизонталь)
+    def define_place(self):
         for ind, sublist in enumerate(self._figures):
             for j in range(len(sublist)):
                 self._figures[ind][j].row = ind
@@ -94,14 +89,14 @@ class Game:
 
     # def is_may_checked(self, chosen: Figure):          # проверка можно ли пойти в этот элемент (следующий)
     #     if chosen.state == FigureState.Init:
-    #         if self.one_place(self.lastchecked, chosen):     #   проверка, находится ли элемент по вертикали или горизонтали
+    #         if self.one_place(self.lastchecked, chosen):  проверка, находится ли элемент по вертикали или горизонтали
     #             if chosen.color == self.lastchecked.color or chosen.typ == self.lastchecked.typ:
     #                 return True
     #     return False
 
+    # ИЗМЕНЕНИЯ ПО КЛИКУ МЫШИ
     def mouse_click(self, chosen: Figure) -> None:
         if len(self.list_checked) == len(self._tmplist):  # win
-            self.win = True
             return
         elif chosen.state == FigureState.Init:   # playing
             if self.list_checked[self.count_checked-1].row == chosen.row or \

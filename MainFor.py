@@ -7,7 +7,7 @@ from HelpWin import Ui_HelpWin as HelpWin
 from game import *
 from PyQt5.QtWidgets import QMainWindow, QPushButton, QItemDelegate, QApplication, QAction, QTableView, QTableWidget, \
     QTableWidgetItem, QStyleOptionViewItem
-from PyQt5.QtGui import QStandardItemModel, QPainter, QMouseEvent, QIcon, QImage
+from PyQt5.QtGui import QStandardItemModel, QPainter, QMouseEvent, QIcon, QImage, QFont, QColor
 from PyQt5.QtCore import QModelIndex, QRectF, Qt
 from PyQt5 import QtSvg
 
@@ -18,22 +18,41 @@ class MainFor(QMainWindow, MainTest):
         self.setupUi(self)
         self.help = None
 
-        images_dir = os.path.join(os.path.dirname(__file__), 'images')
-        self._images = {
-            os.path.splitext(f)[0]: QImage(os.path.join(images_dir, f))
-            # словарь с иконками
-            for f in os.listdir(images_dir)
-        }
-        self.matrix = [[(i, j) for j in range(3)]for i in range(3)]
-        self.drawing()
+        self.matrix = [[(i, j) for j in range(3)] for i in range(3)]
+
+        self.tableWidget.mousePressEvent = self.paintEvent
         # QtSvg.QSvgRenderer(os.path.join(images_dir, f))
 
        # self.tableView.setItemDelegate(Delegate(self))
 
     #def mousePressEvent(self, e):
 
+
+        # qp.begin(self)
+        # qp.setPen(Qt.red)
+        # qp.setFont(QFont('Decorative', 16))
+        # qp.drawText(5, 8, 'Congratulations')
+        # qp.end()
+
     def paintEvent(self, e):
-        p = QPainter(self)
+        qp = QPainter()
+        qp.begin(self)
+        self.drawRectangles(qp)
+        qp.end()
+
+    def drawRectangles(self, qp):
+        col = QColor(0, 0, 0)
+        col.setNamedColor('#d4d4d4')
+        qp.setPen(col)
+
+        qp.setBrush(QColor(200, 0, 0))
+        qp.drawRect(0, 0, 90, 60)
+
+        qp.setBrush(QColor(255, 80, 0, 160))
+        qp.drawRect(0, 15, 90, 60)
+
+        qp.setBrush(QColor(25, 0, 90, 200))
+        qp.drawRect(0, 15, 90, 60)
 
     def show_help(self):  # open rules
         self.help = HelpWindow()
@@ -41,19 +60,21 @@ class MainFor(QMainWindow, MainTest):
 
 
     def drawing(self):
-        p = QPainter(self)
-        p.save()
+        qt = QPainter()
+        qp.setPen(QColor(Qt.Red))
+        qp.setFont(QFont('Decorative', 10))
+        qp.drawText(event.rect(), Qt.AlignCenter, 'Congratulations')
         #self.tableWidget = QTableWidget(3, 3)
-        icon = QIcon('images/red_round_init.png')
-        for i in range(3):
-            for j in range(3):
-                item = QTableWidgetItem(0)
-                item.setIcon(icon)
-                self.tableWidget.setItem(i, j, item)
-                self.tableWidget.setWindowIcon(icon)
-
-        self.tableWidget.viewport().update()
-        p.restore()
+        # icon = QIcon('images/red_round_init.png')
+        # for i in range(3):
+        #     for j in range(3):
+        #         item = QTableWidgetItem(0)
+        #         item.setIcon(icon)
+        #         self.tableWidget.setItem(i, j, item)
+        #         self.tableWidget.setWindowIcon(icon)
+        #
+        # self.tableWidget.viewport().update()
+        # p.restore()
 
 
 

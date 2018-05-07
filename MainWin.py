@@ -75,3 +75,4 @@ class Ui_MainWin(object):
         self.new_game.setText(_translate("MainWin", "Новая"))
         self.settings.setText(_translate("MainWin", "Помощь"))
 
+
