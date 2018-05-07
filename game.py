@@ -9,12 +9,13 @@ class FigureState(Enum):
 
 class Figure:
     # self.isSelected
-    def __init__(self, typ, color, state: FigureState=FigureState.Init):
+    def __init__(self, typ: str, color: str, state: FigureState=FigureState.Init):
         self._typ = typ
         self._color = color
         self._state = state
         self.row = None
         self.column = None
+        #self.win = False
         #self._count = 0
 
     @property
@@ -41,6 +42,7 @@ class Game:
         self._tmplist = []
         self._make_level(level)
         self.define_place()
+        self.win = False
 
         if self.figures != None:
             self.lastchecked = self.figures[0][0]
@@ -66,29 +68,15 @@ class Game:
         #tmplist = []
         for fig in f:
             self._tmplist.append(Figure(fig.split()[0], fig.split()[1], FigureState.Init))
+        f.close()
         self.figures = [self._tmplist[i:i+3] for i in range(0, 9, 3)] #  матрица из фигур 3 на 3
 
 
     def define_place(self):         # проверка, в одном ли подсписке (вертикаль/горизонталь)
-        # for ind, sublist in enumerate(self.figures):
-        #     if fig1 in sublist and fig2 in sublist:
-        #         return True
-
-        # for ind, sublist in enumerate(list(zip(*self.figures))):
-        #     if fig1 in sublist and fig2 in sublist:
-        #         return True
-
         for ind, sublist in enumerate(self.figures):
             for j in range(len(sublist)):
                 self.figures[ind][j].row = ind
                 self.figures[ind][j].column = j
-        # for ind, sublist in enumerate(list(zip(*self.figures))):
-        #     for j in range(len(sublist)):
-        #         self.figures[ind][j].column = ind
-
-        # return False
-
-
 
     def is_may_checked(self, chosen: Figure):          # проверка можно ли пойти в этот элемент (следующий)
         if chosen.state == FigureState.Init:
@@ -99,6 +87,7 @@ class Game:
 
     def mouse_click(self, chosen: Figure) -> None:
         if len(self.list_checked) == len(self._tmplist):  # win
+            self.win = True
             return
         elif chosen.state == FigureState.Init:   # playing
             if self.list_checked[self.countchecked-1].row == chosen.row or \
@@ -110,6 +99,8 @@ class Game:
                     #self.lastchecked = chosen
                     self.list_checked.append(chosen)
                     self.countchecked += 1
+            if self.countchecked == len(self._tmplist):
+                self.win = True
         else:    # if no way out (lose)
             return
 

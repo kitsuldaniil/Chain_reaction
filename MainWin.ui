@@ -6,13 +6,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>350</width>
-    <height>350</height>
+    <width>300</width>
+    <height>380</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>350</width>
+    <width>300</width>
     <height>350</height>
    </size>
   </property>
@@ -33,7 +33,7 @@
    <widget class="QTableView" name="tableView">
     <property name="geometry">
      <rect>
-      <x>40</x>
+      <x>10</x>
       <y>30</y>
       <width>280</width>
       <height>280</height>
@@ -41,7 +41,7 @@
     </property>
     <property name="minimumSize">
      <size>
-      <width>280</width>
+      <width>260</width>
       <height>280</height>
      </size>
     </property>
@@ -73,7 +73,7 @@
    <widget class="QSpinBox" name="levelspinBox">
     <property name="geometry">
      <rect>
-      <x>300</x>
+      <x>240</x>
       <y>0</y>
       <width>42</width>
       <height>22</height>
@@ -95,7 +95,7 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>230</x>
+      <x>170</x>
       <y>0</y>
       <width>71</width>
       <height>31</height>
@@ -120,26 +120,13 @@
      <number>7</number>
     </property>
    </widget>
-   <widget class="QPushButton" name="test">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>0</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>PushButton</string>
-    </property>
-   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>350</width>
+     <width>300</width>
      <height>21</height>
     </rect>
    </property>
@@ -150,25 +137,7 @@
     <addaction name="new_game"/>
     <addaction name="settings"/>
    </widget>
-   <widget class="QMenu" name="menuOptions">
-    <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;Правила Игры&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-    </property>
-    <property name="toolTipDuration">
-     <number>2</number>
-    </property>
-    <property name="statusTip">
-     <string/>
-    </property>
-    <property name="title">
-     <string>Помощь</string>
-    </property>
-    <property name="toolTipsVisible">
-     <bool>true</bool>
-    </property>
-   </widget>
    <addaction name="menuGame"/>
-   <addaction name="menuOptions"/>
   </widget>
   <action name="action">
    <property name="text">
@@ -187,7 +156,7 @@
   </action>
   <action name="settings">
    <property name="text">
-    <string>Настройки</string>
+    <string>Помощь</string>
    </property>
   </action>
  </widget>
