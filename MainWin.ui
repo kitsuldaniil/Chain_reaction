@@ -7,19 +7,19 @@
     <x>0</x>
     <y>0</y>
     <width>300</width>
-    <height>376</height>
+    <height>375</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>300</width>
-    <height>350</height>
+    <height>375</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>350</width>
-    <height>380</height>
+    <width>300</width>
+    <height>375</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -135,9 +135,16 @@
      <string>Игра</string>
     </property>
     <addaction name="new_game"/>
+    <addaction name="help"/>
+   </widget>
+   <widget class="QMenu" name="menuOptions">
+    <property name="title">
+     <string>Настройки</string>
+    </property>
     <addaction name="settings"/>
    </widget>
    <addaction name="menuGame"/>
+   <addaction name="menuOptions"/>
   </widget>
   <action name="action">
    <property name="text">
@@ -154,9 +161,14 @@
     <string>Новая</string>
    </property>
   </action>
-  <action name="settings">
+  <action name="help">
    <property name="text">
     <string>Помощь</string>
+   </property>
+  </action>
+  <action name="settings">
+   <property name="text">
+    <string>Параметры</string>
    </property>
   </action>
  </widget>

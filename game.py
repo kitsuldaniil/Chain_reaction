@@ -120,4 +120,14 @@ class Game:
     мб ещё стоит учесть координаты каждой фигуры, чтобы корректно сделать нажатие мышью??? позишн сопоставляетсяс координатой мыши
 
     прописать состояние текущей игры !!!
+    
+      '''
+              widget = QTableWidget(game.rows, game.columns)
+              self.matrix = copy.deepcopy(self.game._figures)
+                  for i in range(game.rows):
+                 for j in range(game.columns):
+                     item = QTableWidgetItem(self.matrix[i][j])
+                     widget.setItem(game.rows, game.columns, item)
+                     widget.setIcon
+                     '''
 """
